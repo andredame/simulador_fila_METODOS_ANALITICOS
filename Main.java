@@ -7,9 +7,28 @@ public class Main {
 
     public static void main(String[] args) {
 
-        Scanner sc = new Scanner(System.in);
+
+        //TIPO DE FILA G/G/1/2
+        int lambda = 2; // PRIMEIRO NUMERO DO TIPO DE FILA EX G/G/1/2
+        int estadoFila = 2; // PRIMEIRO NUMERO DO TIPO DE FILA EX G/G/1/2
+
+        //TEMPO DE CHEGADA DO PRIMEIRO CLIENT
+        Event.MIN_CHEGADA_CLIENTE = 1.0;
+        Event.MAX_CHEGADA_CLIENTE = 3.0;
+
+        //TEMPO DE PEDIDO DE SAIDA
+        Event.MIN_PEDIDO_SAIDA = 1.0;
+        Event.MAX_PEDIDO_SAIDA = 4.0;
+
+        //TEMPO DE CHEGADA DO PRIMEIRO CLIENTE 
+        double tempoChegada = 1.0;
 
         
+
+
+
+
+
         Fila fila = new Fila();
         //Queue type 
         Queue <Double> numAleatorios = new LinkedList<>();
@@ -19,26 +38,10 @@ public class Main {
         numAleatorios.add(0.7);
         numAleatorios.add(0.4);
         numAleatorios.add(0.1);
-        
-
-        
-        System.out.println("DIGITE AQUI O TIPO DA FILA (NO FORMATO G/G/1/2):");
-        String tipoFila = sc.next();
-        String[] tipoFilaArray = tipoFila.split("/");
-        
-        
-        int lambda = Integer.parseInt(tipoFilaArray[2]);
-
-        int estadoFila = Integer.parseInt(tipoFilaArray[3]);
-
-        System.out.println("Digite o tempo da primeira chegada:");
-        double tempoChegada = sc.nextDouble();
-
         double tempoTotal= 0.0;
         
         while (!numAleatorios.isEmpty()){
             Event eventoAtual;
-
             if (tempoTotal==0.0){
                 eventoAtual= new Event (EventType.CHEGADA,tempoChegada);
             }
@@ -46,8 +49,8 @@ public class Main {
                 eventoAtual = fila.remove();
             }
             
-
             tempoTotal = eventoAtual.getTempo();
+
 
             if(eventoAtual.getType() == EventType.CHEGADA){   
                 
@@ -65,6 +68,8 @@ public class Main {
                     fila.add(EventType.SAIDA,numAleatorios.poll(),tempoTotal);
                 }
             } 
+
+
         }
         System.out.println("Tempo total: " + tempoTotal);
 

@@ -16,15 +16,23 @@ public class Fila {
 
 
     public void add(EventType evento,double numAleatorio,double tempoTotal) {
+        System.out.println("--------------------");
+        System.out.println("Evento: "+evento);
+        System.out.println("Numero Aleatorio: "+numAleatorio);
+        System.out.println("Tempo: "+tempoTotal);
+        double tempoNovo=calculoPosicao(tempoTotal ,evento, numAleatorio);
+        System.out.println("Tempo Novo: "+tempoNovo);
         Event novoEvento ;
         if (evento == EventType.CHEGADA){
             //U(a, b) = a + [(b - a)*x]
-            novoEvento= new Event(EventType.CHEGADA,calculoPosicao(evento, numAleatorio));
+            novoEvento= new Event(EventType.CHEGADA,calculoPosicao(tempoTotal,evento, numAleatorio));
         }
         else{
-            novoEvento = new Event(EventType.SAIDA,calculoPosicao(evento, numAleatorio));
+            novoEvento = new Event(EventType.SAIDA,calculoPosicao(tempoTotal,evento, numAleatorio));
         }
         events.add(novoEvento);
+
+        System.out.println("--------------------");
     }
 
     public Event remove() {
@@ -33,13 +41,13 @@ public class Fila {
 
 
 
-    public double calculoPosicao(EventType evento,double numAleatorio){
+    public double calculoPosicao(double tempoTotal,EventType evento,double numAleatorio){
         if (evento == EventType.CHEGADA){
 
-            return Event.MIN_CHEGADA_CLIENTE + ((Event.MAX_CHEGADA_CLIENTE - Event.MIN_CHEGADA_CLIENTE)*numAleatorio);
+            return tempoTotal + (Event.MIN_CHEGADA_CLIENTE + ((Event.MAX_CHEGADA_CLIENTE - Event.MIN_CHEGADA_CLIENTE)*numAleatorio));
         }
         else{
-            return Event.MIN_PEDIDO_SAIDA + ((Event.MAX_PEDIDO_SAIDA - Event.MIN_PEDIDO_SAIDA)*numAleatorio);
+            return tempoTotal + Event.MIN_PEDIDO_SAIDA + ((Event.MAX_PEDIDO_SAIDA - Event.MIN_PEDIDO_SAIDA)*numAleatorio);
         }
     }
 
