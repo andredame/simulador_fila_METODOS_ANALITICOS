@@ -9,7 +9,7 @@ public class Main {
 
 
         //TIPO DE FILA G/G/1/2
-        int lambda = 2; // PRIMEIRO NUMERO DO TIPO DE FILA EX G/G/1/2
+        int lambda = 1; // PRIMEIRO NUMERO DO TIPO DE FILA EX G/G/1/2
         int estadoFila = 2; // PRIMEIRO NUMERO DO TIPO DE FILA EX G/G/1/2
 
         //TEMPO DE CHEGADA DO PRIMEIRO CLIENT
@@ -24,10 +24,6 @@ public class Main {
         double tempoChegada = 1.0;
 
         
-
-
-
-
 
         Fila fila = new Fila();
         //Queue type 
