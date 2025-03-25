@@ -12,7 +12,13 @@ public class Main {
         
         Fila fila = new Fila();
         //Queue type 
-        Queue <Double> numAleatorios = lerNumerosAleatorios(sc);
+        Queue <Double> numAleatorios = new LinkedList<>();
+        numAleatorios.add(0.6);
+        numAleatorios.add(0.8);
+        numAleatorios.add(0.3);
+        numAleatorios.add(0.7);
+        numAleatorios.add(0.4);
+        numAleatorios.add(0.1);
         
 
         
@@ -65,16 +71,5 @@ public class Main {
 
     }
 
-    private static Queue<Double> lerNumerosAleatorios(Scanner sc) {
-        Queue<Double> numeros = new LinkedList<>();
-        System.out.println("Digite a quantidade de números aleatórios:");
-        int qtd = sc.nextInt();
-
-        for (int i = 0; i < qtd; i++) {
-            System.out.println("Digite o número aleatório " + (i + 1) + ":");
-            numeros.add(sc.nextDouble());
-        }
-
-        return numeros;
-    }
+    
 }
