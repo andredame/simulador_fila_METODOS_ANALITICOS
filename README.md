@@ -9,8 +9,11 @@ Para ambas simulações, considere inicialmente a fila vazia e o primeiro client
 
 Estado da fila = ultimo numero
 
-G G A K
+G G LAMBA K
 G/G/1/3
+
+Lamba= 1 
+k = 3
 
 ### CHEGADA 
 contabiliza tempo

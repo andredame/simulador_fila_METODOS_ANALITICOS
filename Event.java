@@ -5,12 +5,12 @@ public class Event implements Comparable<Event> {
     private double tempo;
 
     //variaveis dadas pelo exercicio
-    public  final static double MIN_CHEGADA_CLIENTE=2; 
-    public final static double MAX_CHEGADA_CLIENTE=5;
+    public  final static double MIN_CHEGADA_CLIENTE=1; 
+    public final static double MAX_CHEGADA_CLIENTE=3;
 
     //variaveis dadas pelo exercicio
-    public final static double MIN_PEDIDO_SAIDA=3;
-    public final static double MAX_PEDIDO_SAIDA=5;
+    public final static double MIN_PEDIDO_SAIDA=1;
+    public final static double MAX_PEDIDO_SAIDA=4;
 
     public Event(EventType type, double tempo) {
         this.type = type;
