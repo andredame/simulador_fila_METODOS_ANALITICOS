@@ -16,11 +16,5 @@ public class RandomNumbers {
         return seed / m;
     }
 
-    public static void main(String[] args) {
-        RandomNumbers randomNumbers = new RandomNumbers(1, 3, 5, 19);
-        for (int i = 0; i < 10; i++) {
-            System.out.println(randomNumbers.next());
-        }
-    }
     
 }

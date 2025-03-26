@@ -16,12 +16,8 @@ public class Fila {
 
 
     public void add(EventType evento,double numAleatorio,double tempoTotal) {
-        System.out.println("--------------------");
-        System.out.println("Evento: "+evento);
-        System.out.println("Numero Aleatorio: "+numAleatorio);
-        System.out.println("Tempo: "+tempoTotal);
+        
         double tempoNovo=calculoPosicao(tempoTotal ,evento, numAleatorio);
-        System.out.println("Tempo Novo: "+tempoNovo);
         Event novoEvento ;
         if (evento == EventType.CHEGADA){
             //U(a, b) = a + [(b - a)*x]
@@ -32,7 +28,6 @@ public class Fila {
         }
         events.add(novoEvento);
 
-        System.out.println("--------------------");
     }
 
     public Event remove() {
