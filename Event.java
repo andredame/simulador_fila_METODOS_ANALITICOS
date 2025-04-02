@@ -4,20 +4,11 @@ public class Event implements Comparable<Event> {
     private EventType type;
     private double tempo;
 
-    //variaveis dadas pelo exercicio
-    public  static double MIN_CHEGADA_CLIENTE; 
-    public static double MAX_CHEGADA_CLIENTE;
-
-    //variaveis dadas pelo exercicio
-    public static double MIN_PEDIDO_SAIDA;
-    public static double MAX_PEDIDO_SAIDA;
-
     public Event(EventType type, double tempo) {
         this.type = type;
         this.tempo = tempo;
 
     }
-
 
     public EventType getType() {
         return type;

@@ -4,77 +4,103 @@ import java.util.PriorityQueue;
 
 
 public class Fila {
-    private PriorityQueue<Event> events;
-    private int tamFila;
+    private int servidores;
+    
+    private int capacidade;
+    private double MinArrival;
+    private double MaxArrival;
+    private double MinService;
+    private double MaxService;
+    private int customerCount;
+    private int lossCount;
+    private double totalTime;
 
-
-
-    public Fila() {
-        this.events = new PriorityQueue<>();
-        this.tamFila = 0;
+    public Fila(int servidores, int capacidade, double MinArrival, double MaxArrival, double MinService, double MaxService) {
+        this.servidores = servidores;
+        this.capacidade = capacidade;
+        this.MinArrival = MinArrival;
+        this.MaxArrival = MaxArrival;
+        this.MinService = MinService;
+        this.MaxService = MaxService;
+        this.customerCount = 0;
+        this.lossCount = 0;
+        this.totalTime = 0.0;
     }
 
 
-    public void add(EventType evento,double numAleatorio,double tempoTotal) {
-        System.out.println("--------------------");
-        System.out.println("Evento: "+evento);
-        System.out.println("Numero Aleatorio: "+numAleatorio);
-        System.out.println("Tempo: "+tempoTotal);
-        double tempoNovo=calculoPosicao(tempoTotal ,evento, numAleatorio);
-        System.out.println("Tempo Novo: "+tempoNovo);
-        Event novoEvento ;
-        if (evento == EventType.CHEGADA){
-            //U(a, b) = a + [(b - a)*x]
-            novoEvento= new Event(EventType.CHEGADA,calculoPosicao(tempoTotal,evento, numAleatorio));
-        }
-        else{
-            novoEvento = new Event(EventType.SAIDA,calculoPosicao(tempoTotal,evento, numAleatorio));
-        }
-        events.add(novoEvento);
-
-        System.out.println("--------------------");
+    public int status(){
+        return customerCount;
     }
 
-    public Event remove() {
-        return events.poll();
+    public void loss(){
+        lossCount++;
+    }
+    public void in(){
+        customerCount++;
+    }
+    public void out(){
+        customerCount--;
+    }
+    
+    
+    public int getServidores() {
+        return servidores;
     }
 
-
-
-    public double calculoPosicao(double tempoTotal,EventType evento,double numAleatorio){
-        if (evento == EventType.CHEGADA){
-
-            return tempoTotal + (Event.MIN_CHEGADA_CLIENTE + ((Event.MAX_CHEGADA_CLIENTE - Event.MIN_CHEGADA_CLIENTE)*numAleatorio));
-        }
-        else{
-            return tempoTotal + Event.MIN_PEDIDO_SAIDA + ((Event.MAX_PEDIDO_SAIDA - Event.MIN_PEDIDO_SAIDA)*numAleatorio);
-        }
+    public void setServidores(int servidores) {
+        this.servidores = servidores;
     }
 
-
-    public void incrementaFila(){
-        this.tamFila++;
+    public int getCapacidade() {
+        return capacidade;
     }
-    public void decrementaFila(){
-        this.tamFila--;
+    public void setCapacidade(int capacidade) {
+        this.capacidade = capacidade;
     }
-
-
-
-    public boolean isEmpty() {
-        return events.isEmpty();
+    public double getMinArrival() {
+        return MinArrival;
     }
-    public int size() {
-        return events.size();
+    public void setMinArrival(double minArrival) {
+        MinArrival = minArrival;
     }
-
-    public int getTamFila() {
-        return tamFila;
+    public double getMaxArrival() {
+        return MaxArrival;
     }
-    public void setTamFila(int tamFila) {
-        this.tamFila = tamFila;
+    public void setMaxArrival(double maxArrival) {
+        MaxArrival = maxArrival;
     }
-
+    public double getMinService() {
+        return MinService;
+    }
+    public void setMinService(double minService) {
+        MinService = minService;
+    }
+    public double getMaxService() {
+        return MaxService;
+    }
+    public void setMaxService(double maxService) {
+        MaxService = maxService;
+    }
+    public int getCustomerCount() {
+        return customerCount;
+    }
+    public void setCustomerCount(int customerCount) {
+        this.customerCount = customerCount;
+    }
+    public int getLossCount() {
+        return lossCount;
+    }
+    public void setLossCount(int lossCount) {
+        this.lossCount = lossCount;
+    }
+    public double getTotalTime() {
+        return totalTime;
+    }
+    public void setTotalTime(double totalTime) {
+        this.totalTime = totalTime;
+    }
+    
+    
 
 
 

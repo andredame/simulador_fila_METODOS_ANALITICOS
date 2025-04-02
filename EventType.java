@@ -1,3 +1,3 @@
 public enum EventType {
-    CHEGADA, SAIDA
+    CHEGADA, SAIDA, PASSAGEM
 }
