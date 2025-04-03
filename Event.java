@@ -1,4 +1,3 @@
-import java.io.FilenameFilter;
 
 public class Event implements Comparable<Event> {
     private EventType type;
@@ -22,7 +21,6 @@ public class Event implements Comparable<Event> {
     public void setTempo(double tempo) {
         this.tempo = tempo;
     }
-
 
     @Override
     public int compareTo(Event other) {

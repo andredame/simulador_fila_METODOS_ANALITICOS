@@ -1,6 +1,3 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.PriorityQueue;
 
 
 public class Fila {
@@ -14,6 +11,8 @@ public class Fila {
     private int customerCount;
     private int lossCount;
     private double totalTime;
+    private double[] tempo_estado;
+    
 
     public Fila(
         int servidores,
@@ -33,6 +32,18 @@ public class Fila {
         this.customerCount = 0;
         this.lossCount = 0;
         this.totalTime = 0.0;
+        this.tempo_estado= new double[capacidade];
+        for (int i = 0; i < capacidade; i++) {
+            tempo_estado[i] = 0.0;
+        }
+        
+    }
+    public void acumulaTempoEstado(double tempoChegada){
+        this.tempo_estado[this.customerCount] = tempoChegada;
+        
+    }
+    public double getTempoEstado(int i){
+        return tempo_estado[i];
     }
 
 
@@ -49,8 +60,6 @@ public class Fila {
     public void out(){
         customerCount--;
     }
-    
-    
     public int getServidores() {
         return servidores;
     }
@@ -58,52 +67,56 @@ public class Fila {
     public int getCapacidade() {
         return capacidade;
     }
-    public void setCapacidade(int capacidade) {
-        this.capacidade = capacidade;
-    }
+
     public double getMinArrival() {
         return MinArrival;
     }
-    public void setMinArrival(double minArrival) {
-        MinArrival = minArrival;
-    }
+
     public double getMaxArrival() {
         return MaxArrival;
     }
-    public void setMaxArrival(double maxArrival) {
-        MaxArrival = maxArrival;
-    }
+
     public double getMinService() {
         return MinService;
     }
-    public void setMinService(double minService) {
-        MinService = minService;
-    }
+
     public double getMaxService() {
         return MaxService;
     }
-    public void setMaxService(double maxService) {
-        MaxService = maxService;
-    }
+
     public int getCustomerCount() {
         return customerCount;
     }
-    public void setCustomerCount(int customerCount) {
-        this.customerCount = customerCount;
-    }
+
     public int getLossCount() {
         return lossCount;
     }
-    public void setLossCount(int lossCount) {
-        this.lossCount = lossCount;
-    }
+    
     public double getTotalTime() {
         return totalTime;
     }
+
     public void setTotalTime(double totalTime) {
         this.totalTime = totalTime;
     }
-    
+
+    public void imprimir() {
+        System.out.println("Fila: ");
+        System.out.println("Servidores: " + servidores);
+        System.out.println("Capacidade: " + capacidade);
+        System.out.println("Min Arrival: " + MinArrival);
+        System.out.println("Max Arrival: " + MaxArrival);
+        System.out.println("Min Service: " + MinService);
+        System.out.println("Max Service: " + MaxService);
+        System.out.println("Customer Count: " + customerCount);
+        System.out.println("Loss Count: " + lossCount);
+        System.out.println("Total Time: " + totalTime);
+        System.out.println("Probabilidade de cada estado: ");
+        for (int i = 0; i < capacidade; i++) {
+            System.out.println("Estado " + i + ": " + tempo_estado[i]/totalTime * 100 + "%");
+        }
+    }
+
     
 
 
