@@ -32,7 +32,7 @@ public class Fila {
         this.customerCount = 0;
         this.lossCount = 0;
         this.totalTime = 0.0;
-        this.tempo_estado= new double[capacidade];
+        this.tempo_estado= new double[capacidade+1];
         for (int i = 0; i < capacidade; i++) {
             tempo_estado[i] = 0.0;
         }
