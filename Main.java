@@ -8,24 +8,31 @@ public class Main {
     public static void main(String[] args) {
 
 
-        //TIPO DE FILA G/G/1/2
-        int lambda = 1; // PRIMEIRO NUMERO DO TIPO DE FILA EX G/G/1/2
-        int estadoFila = 2; // PRIMEIRO NUMERO DO TIPO DE FILA EX G/G/1/2
-
-        //TEMPO DE CHEGADA DO PRIMEIRO CLIENT
-        Event.MIN_CHEGADA_CLIENTE = 1.0;
-        Event.MAX_CHEGADA_CLIENTE = 3.0;
-
-        //TEMPO DE PEDIDO DE SAIDA
-        Event.MIN_PEDIDO_SAIDA = 1.0;
-        Event.MAX_PEDIDO_SAIDA = 4.0;
-
-        //TEMPO DE CHEGADA DO PRIMEIRO CLIENTE 
-        double tempoChegada = 1.0;
+        //TIPO DE FILA G/G/SERVIDORES/CAPACIDADE
+        int servidores = 2; 
+        int capacidade = 4; 
 
         
 
-        Fila fila = new Fila();
+        Fila fila1 = new Fila(
+            servidores,
+            capacidade,
+            0.0, //MinArrival
+            1.0, //MaxArrival
+            0.0, //MinService
+            1.0 //MaxService
+        );
+        servidores = 3;
+        capacidade = 5;
+        Fila fila2 = new Fila(
+            servidores,
+            capacidade,
+            0.0, //MinArrival
+            1.0, //MaxArrival
+            0.0, //MinService
+            1.0 //MaxService
+
+        );
         //Queue type 
         Queue <Double> numAleatorios = new LinkedList<>();
         numAleatorios.add(0.6);
@@ -34,7 +41,11 @@ public class Main {
         numAleatorios.add(0.7);
         numAleatorios.add(0.4);
         numAleatorios.add(0.1);
+
+        PriorityQueue<Event> escalonador = new PriorityQueue<>();
+
         double tempoTotal= 0.0;
+        double tempoChegada = 0.0;
         
         while (!numAleatorios.isEmpty()){
             Event eventoAtual;
@@ -49,21 +60,40 @@ public class Main {
 
 
             if(eventoAtual.getType() == EventType.CHEGADA){   
-                
-                if (fila.size()<estadoFila){
-                    fila.incrementaFila();
-                    if(fila.getTamFila()<=lambda){
-                        fila.add(EventType.SAIDA,numAleatorios.poll(),tempoTotal);
+                //ACUMULA TEMPO CHEGADA
+                if(fila1.status() < fila1.getCapacidade()){
+                    fila1.in();
+                    if(fila1.status()<=fila1.getServidores()){
+                        //adicionar passagem
                     }
                 }
-                fila.add(EventType.CHEGADA,numAleatorios.poll(),tempoTotal);
+                else{fila1.loss();}
+                //ESCALONA UMA CHEGADA                 
             }
-            else{
-                fila.decrementaFila();
-                if(fila.getTamFila()>=lambda){
-                    fila.add(EventType.SAIDA,numAleatorios.poll(),tempoTotal);
+
+            if(eventoAtual.getType() == EventType.SAIDA){
+                //ACUMULA TEMPO 
+                fila2.out();
+                if(fila2.status()>=fila2.getServidores()){
+                    //ADICIONA UMA SAIDA com os tempos da segunda fila 
                 }
-            } 
+            }
+            if(eventoAtual.getType() == EventType.PASSAGEM){
+                fila1.out();
+                if(fila1.status()>=fila1.getServidores()){
+                   //ESCALONADOR ADD TG PA 5,6 SAIDA FILA 1 
+                }
+                if (fila2.status()<fila2.getCapacidade()){
+                    fila2.in();
+                    if(fila2.status()<=fila2.getServidores()){
+                        //ESCALONADOR ADD SAIDA SEGUNDA FILA
+                    }
+                }
+                else{
+                    fila2.loss();
+                }
+            }
+            
 
 
         }

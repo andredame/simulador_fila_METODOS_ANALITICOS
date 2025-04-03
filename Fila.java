@@ -15,7 +15,15 @@ public class Fila {
     private int lossCount;
     private double totalTime;
 
-    public Fila(int servidores, int capacidade, double MinArrival, double MaxArrival, double MinService, double MaxService) {
+    public Fila(
+        int servidores,
+         int capacidade, 
+         double MinArrival, 
+         double MaxArrival, 
+         double MinService, 
+         double MaxService
+        ) {
+
         this.servidores = servidores;
         this.capacidade = capacidade;
         this.MinArrival = MinArrival;
@@ -45,10 +53,6 @@ public class Fila {
     
     public int getServidores() {
         return servidores;
-    }
-
-    public void setServidores(int servidores) {
-        this.servidores = servidores;
     }
 
     public int getCapacidade() {
