@@ -12,6 +12,7 @@ public class Fila {
     private int lossCount;
     private double totalTime;
     private double[] tempo_estado;
+    private double roteamento;
     
 
     public Fila(
@@ -20,7 +21,8 @@ public class Fila {
          double MinArrival, 
          double MaxArrival, 
          double MinService, 
-         double MaxService
+         double MaxService,
+         double roteamento
         ) {
 
         this.servidores = servidores;
@@ -29,6 +31,7 @@ public class Fila {
         this.MaxArrival = MaxArrival;
         this.MinService = MinService;
         this.MaxService = MaxService;
+        this.roteamento = roteamento;
         this.customerCount = 0;
         this.lossCount = 0;
         this.totalTime = 0.0;
@@ -99,6 +102,10 @@ public class Fila {
     public void setTotalTime(double totalTime) {
         this.totalTime = totalTime;
     }
+    public double getRoteamento() {
+        return roteamento;
+    }
+
 
     public void imprimir() {
         System.out.println("Fila: ");
@@ -111,6 +118,7 @@ public class Fila {
         System.out.println("Customer Count: " + customerCount);
         System.out.println("Loss Count: " + lossCount);
         System.out.println("Total Time: " + totalTime);
+        System.out.println("Roteamento: " + roteamento);
         System.out.println("Probabilidade de cada estado: ");
         for (int i = 0; i < capacidade; i++) {
             System.out.println("Estado " + i + ": " + tempo_estado[i]/totalTime * 100 + "%");

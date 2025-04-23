@@ -1,149 +1,108 @@
 import java.util.*;
 
-
-
-
 public class Main {
 
     public static void main(String[] args) {
-
-
-        //TIPO DE FILA G/G/SERVIDORES/CAPACIDADE
-        // FILA 1 G/G/2/3 CHEGADA entre 1...4, ATENDIMENTO 3..4
-        int servidores = 2; 
-        int capacidade = 3; 
-
-        
-
-        Fila fila1 = new Fila(
-            servidores,
-            capacidade,
-            1.0, //MinArrival
-            4.0, //MaxArrival
-            3.0, //MinService
-            4.0 //MaxService
-        );
-        // Fila 2 - G/G/1/5, atendimento entre 2..3.
-
-        servidores = 1;
-        capacidade = 5;
-        Fila fila2 = new Fila(
-            servidores,
-            capacidade,
-            0.0, //MinArrival
-            0.0, //MaxArrival
-            2.0, //MinService
-            3.0 //MaxService
-        );
-        //Queue type 
-        Queue<Double> numAleatorios = new LinkedList<>();
-        RandomNumbers gerador = new RandomNumbers(1, 1664525, 1013904223, Math.pow(2, 32));
-        for (int i = 0; i < 100000; i++) {
-            numAleatorios.add(gerador.next());
-        }
-        
+        Queue<Double> numAleatorios = gerarNumerosAleatorios(100_000);
         PriorityQueue<Event> escalonador = new PriorityQueue<>();
+        ArrayList<Fila> redeFilas = new ArrayList<>();
 
+        Fila fila1 = criarFila1();
+        Fila fila2 = criarFila2();
 
+        double tempoTotal = 0.0;
+        escalonador.add(new Event(EventType.CHEGADA, 1.5));
 
-        double tempoTotal= 0.0;
-        double tempoChegada = 1.5;
-        escalonador.add(new Event(EventType.CHEGADA, tempoChegada));
-        
-        while (!numAleatorios.isEmpty()){
-            //Pega o proximo evento
+        while (!numAleatorios.isEmpty()) {
             Event eventoAtual = escalonador.poll();
+            double tempoEvento = eventoAtual.getTempo();
 
-            //ACUMULA TEMPO NOS ESTADOS DE CADA FILA 
-            fila1.acumulaTempoEstado( eventoAtual.getTempo()-tempoTotal);
-            fila2.acumulaTempoEstado( eventoAtual.getTempo()-tempoTotal);
-            //ATUALIZA O TEMPO TOTAL
-            
-            tempoTotal = eventoAtual.getTempo();
-            //ACUMULA TEMPO
-            acumulaTempo(fila1, fila2, eventoAtual.getTempo());
-            if(eventoAtual.getType() == EventType.CHEGADA){   
-                //ACUMULA TEMPO CHEGADA
+            acumularTempo(fila1, fila2, tempoEvento - tempoTotal);
+            tempoTotal = tempoEvento;
 
-                if(fila1.status() < fila1.getCapacidade()){
-                    fila1.in();
-                    if(fila1.status()<=fila1.getServidores()){
-                        if(!numAleatorios.isEmpty()){
-                            escalonador.add(new Event(EventType.PASSAGEM, escalonaPassagem(fila1, numAleatorios.poll(), tempoTotal)));
-                        }
-                    }
-                }
-                else{fila1.loss();}
-                if(!numAleatorios.isEmpty()){
-                    //ESCALONADOR ADD CHEGADA
-                    escalonador.add(new Event(EventType.CHEGADA, escalonaChegada(fila1, numAleatorios.poll(), tempoTotal)));
-                }
-                
-            }
-
-            if(eventoAtual.getType() == EventType.SAIDA){
-                
-                fila2.out();
-                if(fila2.status()>=fila2.getServidores()){
-                    if (!numAleatorios.isEmpty()){
-                        escalonador.add(new Event(EventType.SAIDA, escalonaPassagem(fila2, numAleatorios.poll(), tempoTotal)));
-                    }
-                }
-            }
-            if(eventoAtual.getType() == EventType.PASSAGEM){
-                fila1.out();
-                if(fila1.status()>=fila1.getServidores()){
-                    if (!numAleatorios.isEmpty()){
-                        escalonador.add(new Event(EventType.PASSAGEM, escalonaSaida(fila1, numAleatorios.poll(), tempoTotal)));
-                    }
-                }
-                if (fila2.status()<fila2.getCapacidade()){
-                    fila2.in();
-                    if(fila2.status()<=fila2.getServidores()){
-                        //ESCALONADOR ADD SAIDA SEGUNDA FILA
-                        if (!numAleatorios.isEmpty()){
-                            escalonador.add(new Event(EventType.SAIDA, escalonaSaida(fila2, numAleatorios.poll(), tempoTotal)));
-                        }
-                    }
-                }
-                else{
-                    fila2.loss();
-                }
-            }
-            
-
-
+            processarEvento(eventoAtual, fila1, fila2, escalonador, numAleatorios, tempoTotal);
         }
+
         fila1.imprimir();
         fila2.imprimir();
-
-
-
-
     }
-    public static void acumulaTempo(Fila fila1, Fila fila2, double tempoChegada){
-        fila1.setTotalTime(tempoChegada);
-        fila2.setTotalTime(tempoChegada);
+    private static Fila criarFila1() {
+        return new Fila(2, 3, 1.0, 4.0, 3.0, 4.0,0.2); // G/G/2/3
     }
 
-    public static double escalonaPassagem(Fila fila, double numAleatorio,double tempoTotal){
-
-        double tempoPassagem = tempoTotal + fila.getMinService() + ((fila.getMaxService() - fila.getMinService()) * numAleatorio);
-        return tempoPassagem;
-
+    private static Fila criarFila2() {
+        return new Fila(1, 5, 0.0, 0.0, 2.0, 3.0,0.2); // G/G/1/5
     }
-    public static double escalonaSaida(Fila fila, double numAleatorio,double tempoTotal){
 
-        double tempoSaida = tempoTotal +fila.getMinService() + ((fila.getMaxService() - fila.getMinService()) * numAleatorio);
-        return tempoSaida;
+    // ------------------ Métodos auxiliares ----------------------
 
-    }
-    public static double escalonaChegada(Fila fila, double numAleatorio,double tempoTotal){
-
-        double tempoChegada = tempoTotal + fila.getMinArrival() + ((fila.getMaxArrival() - fila.getMinArrival()) * numAleatorio);
-        return tempoChegada;
-
+    private static Queue<Double> gerarNumerosAleatorios(int quantidade) {
+        Queue<Double> fila = new LinkedList<>();
+        RandomNumbers gerador = new RandomNumbers(1, 1664525, 1013904223, Math.pow(2, 32));
+        for (int i = 0; i < quantidade; i++) {
+            fila.add(gerador.next());
+        }
+        return fila;
     }
 
     
+
+    private static void acumularTempo(Fila origem, Fila destino, double delta) {
+        origem.acumulaTempoEstado(delta);
+        destino.acumulaTempoEstado(delta);
+        origem.setTotalTime(origem.getTotalTime() + delta);
+        destino.setTotalTime(destino.getTotalTime() + delta);
+    }
+
+    private static void processarEvento(
+        Event evento, Fila origem, Fila destino, PriorityQueue<Event> escalonador, Queue<Double> aleatorios, double tempoAtual
+    ) {
+        switch (evento.getType()) {
+            case CHEGADA -> processarChegada(origem, escalonador, aleatorios, tempoAtual);
+            case PASSAGEM -> processarPassagem(origem, destino, escalonador, aleatorios, tempoAtual);
+            case SAIDA -> processarSaida(destino, escalonador, aleatorios, tempoAtual);
+        }
+    }
+
+    private static void processarChegada(Fila origem, PriorityQueue<Event> escalonador, Queue<Double> aleatorios, double tempo) {
+        if (origem.status() < origem.getCapacidade()) {
+            origem.in();
+            if (origem.status() <= origem.getServidores() && !aleatorios.isEmpty()) {
+                escalonador.add(new Event(EventType.PASSAGEM, calculaTempo(tempo, aleatorios.poll(), origem.getMinService(), origem.getMaxService())));
+            }
+        } else {
+            origem.loss();
+        }
+
+        if (!aleatorios.isEmpty()) {
+            escalonador.add(new Event(EventType.CHEGADA, calculaTempo(tempo, aleatorios.poll(), origem.getMinArrival(), origem.getMaxArrival())));
+        }
+    }
+
+    private static void processarPassagem(Fila origem, Fila destino, PriorityQueue<Event> escalonador, Queue<Double> aleatorios, double tempo) {
+        origem.out();
+        if (origem.status() >= origem.getServidores() && !aleatorios.isEmpty()) {
+            escalonador.add(new Event(EventType.PASSAGEM, calculaTempo(tempo, aleatorios.poll(), origem.getMinService(), origem.getMaxService())));
+        }
+
+        if (destino.status() < destino.getCapacidade()) {
+            destino.in();
+            if (destino.status() <= destino.getServidores() && !aleatorios.isEmpty()) {
+                escalonador.add(new Event(EventType.SAIDA, calculaTempo(tempo, aleatorios.poll(), destino.getMinService(), destino.getMaxService())));
+            }
+        } else {
+            destino.loss();
+        }
+    }
+
+    private static void processarSaida(Fila destino, PriorityQueue<Event> escalonador, Queue<Double> aleatorios, double tempo) {
+        destino.out();
+        if (destino.status() >= destino.getServidores() && !aleatorios.isEmpty()) {
+            escalonador.add(new Event(EventType.SAIDA, calculaTempo(tempo, aleatorios.poll(), destino.getMinService(), destino.getMaxService())));
+        }
+    }
+
+    private static double calculaTempo(double tempoAtual, double aleatorio, double min, double max) {
+        return tempoAtual + min + ((max - min) * aleatorio);
+    }
 }
