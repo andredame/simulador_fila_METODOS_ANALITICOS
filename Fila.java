@@ -1,4 +1,4 @@
-
+import java.util.Map;
 
 public class Fila {
     private int servidores;
@@ -12,8 +12,7 @@ public class Fila {
     private int lossCount;
     private double totalTime;
     private double[] tempo_estado;
-    private double roteamento;
-    
+    private Map<Integer,Double> listRoteamento;
 
     public Fila(
         int servidores,
@@ -22,7 +21,7 @@ public class Fila {
          double MaxArrival, 
          double MinService, 
          double MaxService,
-         double roteamento
+         Map<Integer,Double> listRoteamento
         ) {
 
         this.servidores = servidores;
@@ -31,7 +30,8 @@ public class Fila {
         this.MaxArrival = MaxArrival;
         this.MinService = MinService;
         this.MaxService = MaxService;
-        this.roteamento = roteamento;
+        this.listRoteamento = listRoteamento;
+
         this.customerCount = 0;
         this.lossCount = 0;
         this.totalTime = 0.0;
@@ -41,6 +41,30 @@ public class Fila {
         }
         
     }
+    public Fila(
+        int servidores,
+         double MinArrival, 
+         double MaxArrival, 
+         double MinService, 
+         double MaxService,
+         Map<Integer,Double> listRoteamento
+        ) {
+
+        this.servidores = servidores;
+        this.MinArrival = MinArrival;
+        this.MaxArrival = MaxArrival;
+        this.MinService = MinService;
+        this.MaxService = MaxService;
+        this.listRoteamento = listRoteamento;
+
+        this.customerCount = 0;
+        this.lossCount = 0;
+        this.totalTime = 0.0;
+
+        
+    }
+
+  
     public void acumulaTempoEstado(double tempoChegada){
         this.tempo_estado[this.customerCount] = tempoChegada;
         

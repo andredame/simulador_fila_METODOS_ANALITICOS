@@ -9,6 +9,12 @@ public class Main {
 
         Fila fila1 = criarFila1();
         Fila fila2 = criarFila2();
+        Fila fila3 = criarFila3();
+
+        redeFilas.add(fila1);
+        redeFilas.add(fila2);
+        redeFilas.add(fila3);
+
 
         double tempoTotal = 0.0;
         escalonador.add(new Event(EventType.CHEGADA, 1.5));
@@ -26,15 +32,50 @@ public class Main {
         fila1.imprimir();
         fila2.imprimir();
     }
+    
+    
     private static Fila criarFila1() {
-        return new Fila(2, 3, 1.0, 4.0, 3.0, 4.0,0.2); // G/G/2/3
+        Map <Integer,Double> listRoteamento = new HashMap<>();
+        listRoteamento.put(3, 0.2);
+        listRoteamento.put(2, 0.8);
+        return new Fila(
+            1, 
+        2.0, 
+        4.0, 
+        4.0, 
+        8.0,
+        listRoteamento
+        ); 
     }
 
     private static Fila criarFila2() {
-        return new Fila(1, 5, 0.0, 0.0, 2.0, 3.0,0.2); // G/G/1/5
+        Map <Integer,Double> listRoteamento = new HashMap<>();
+        listRoteamento.put(-1, 0.2);
+        listRoteamento.put(1, 0.3);
+        listRoteamento.put(2, 0.5);
+        
+        return new Fila(2, 
+        5, 
+        2.0, 
+        4.0, 
+        5.0, 
+        15.0,
+        listRoteamento); // G/G/1/5
     }
 
-    // ------------------ Métodos auxiliares ----------------------
+    private static Fila criarFila3() {
+        Map <Integer,Double> listRoteamento = new HashMap<>();
+        listRoteamento.put(-1, 0.3);
+        listRoteamento.put(3, 0.7);
+        return new Fila(1, 
+        5,
+        0.0,
+        0.0,
+        2.0,
+         3.0,
+         listRoteamento); // G/G/1/5
+    }
+
 
     private static Queue<Double> gerarNumerosAleatorios(int quantidade) {
         Queue<Double> fila = new LinkedList<>();
