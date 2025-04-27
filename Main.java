@@ -8,7 +8,7 @@ public class Main {
         Fila fila2 = new Fila("f2", 2, 5, 4, 8);
         Fila fila3 = new Fila("f3", 2, 10, 5, 15);
 
-        int [] intChegada= {2, 4};
+        float [] primeiraChegada= {2, 4};
         LinkedList<Fila> filas = new LinkedList<Fila>();
         filas.add(fila1);filas.add(fila2); filas.add(fila3);
         //adicione as networks
@@ -18,14 +18,8 @@ public class Main {
         addNetwork(filas, "f2", "f2", 0.5f);
         addNetwork(filas, "f3", "f3", 0.7f);
 
-        //Criacao de numeros aleatorios
-        Queue<Double> numAleatorios = new LinkedList<>();
-        RandomNumbers gerador = new RandomNumbers(1, 1664525, 1013904223, Math.pow(2, 32));
-        for (int i = 0; i < 100000; i++) {
-            numAleatorios.add(gerador.next());
-        }
-
-        FilaRoteamento filaRoteamento = new FilaRoteamento(filas, intChegada,2.0, );
+    
+        FilaRoteamento filaRoteamento = new FilaRoteamento(filas, primeiraChegada,2,100000,123 );
         // Executa a simulação
         filaRoteamento.run();
         // Imprime os resultados
