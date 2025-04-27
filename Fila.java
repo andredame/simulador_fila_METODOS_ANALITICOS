@@ -1,156 +1,118 @@
-import java.util.Map;
+import java.util.HashMap;
+import java.util.PriorityQueue;
 
 public class Fila {
-    private int servidores;
+    private String id;
+    private int f;
+    private int c;
+    private int k;
+    private int perdas = 0;
+    //par com fila/probabilidade
+    private PriorityQueue<Par<Fila, Float>> q;
+    private float inicioAtendimento;
+    private float fimAtendimento;
+	private HashMap<Integer, Float> estados;
     
-    private int capacidade;
-    private double MinArrival;
-    private double MaxArrival;
-    private double MinService;
-    private double MaxService;
-    private int customerCount;
-    private int lossCount;
-    private double totalTime;
-    private double[] tempo_estado;
-    private Map<Integer,Double> listRoteamento;
+    public Fila(String id, int c, int k, float inicioAtendimento, float fimAtendimento) {
+        this.id = id;
+        this.f = 0;
+        this.c = c;
+        this.k = k;
+        this.q =  new PriorityQueue<Par<Fila, Float>>();
+        this.inicioAtendimento = inicioAtendimento;
+        this.fimAtendimento = fimAtendimento;
+        estados = new HashMap<Integer, Float>();
+    }
 
-    public Fila(
-        int servidores,
-         int capacidade, 
-         double MinArrival, 
-         double MaxArrival, 
-         double MinService, 
-         double MaxService,
-         Map<Integer,Double> listRoteamento
-        ) {
+    public Fila(int c, int k, float inicioAtendimento, float fimAtendimento) {
+        this.f = 0;
+        this.c = c;
+        this.k = k;
+        this.inicioAtendimento = inicioAtendimento;
+        this.fimAtendimento = fimAtendimento;
+        estados = new HashMap<Integer, Float>();
+    }
 
-        this.servidores = servidores;
-        this.capacidade = capacidade;
-        this.MinArrival = MinArrival;
-        this.MaxArrival = MaxArrival;
-        this.MinService = MinService;
-        this.MaxService = MaxService;
-        this.listRoteamento = listRoteamento;
+    public String getId() {
+        return id;
+    }
 
-        this.customerCount = 0;
-        this.lossCount = 0;
-        this.totalTime = 0.0;
-        this.tempo_estado= new double[capacidade+1];
-        for (int i = 0; i < capacidade; i++) {
-            tempo_estado[i] = 0.0;
+    public int getF() {
+        return f;
+    }
+
+    public int getC() {
+        return c;
+    }
+    
+    public int getK() {
+        return k;
+    }
+
+    public float getInicioA() {
+        return inicioAtendimento;
+    }
+
+    public float getFimA() {
+        return fimAtendimento;
+    }
+
+    public void inc() {
+        this.f++;
+    }
+
+    public void add(Fila target, Float prob) {
+        q.add(new Par<Fila, Float>(target, prob));
+    }
+
+    //percorre a fila com as probabilidades e agenda saida ou passagem
+    public Evento target(Float prob, Float tempo, Fila source) {
+        //acumula as probabilidades em ordem decrescente ate encontrar a fila destino caso nao encontre agenda uma saida
+        float acc = 0;
+        for(Par<Fila, Float> par : q) {
+            acc += par.getProb();
+            if(prob <= acc) {
+                //agenda uma passagem de uma fila para outra de acordo com as probabilidades
+                return new Evento(tempo, source, par.getFila(), 'p');
+            }
         }
-        
-    }
-    public Fila(
-        int servidores,
-         double MinArrival, 
-         double MaxArrival, 
-         double MinService, 
-         double MaxService,
-         Map<Integer,Double> listRoteamento
-        ) {
-
-        this.servidores = servidores;
-        this.MinArrival = MinArrival;
-        this.MaxArrival = MaxArrival;
-        this.MinService = MinService;
-        this.MaxService = MaxService;
-        this.listRoteamento = listRoteamento;
-
-        this.customerCount = 0;
-        this.lossCount = 0;
-        this.totalTime = 0.0;
-
-        
+        //ou agenda uma saida
+        return new Evento(tempo, source, source, 's');
     }
 
-  
-    public void acumulaTempoEstado(double tempoChegada){
-        this.tempo_estado[this.customerCount] = tempoChegada;
-        
-    }
-    public double getTempoEstado(int i){
-        return tempo_estado[i];
+    public void dec() {
+        this.f--;
     }
 
-
-    public int status(){
-        return customerCount;
+    public void incPerda() {
+        this.perdas++;
     }
 
-    public void loss(){
-        lossCount++;
-    }
-    public void in(){
-        customerCount++;
-    }
-    public void out(){
-        customerCount--;
-    }
-    public int getServidores() {
-        return servidores;
-    }
-
-    public int getCapacidade() {
-        return capacidade;
-    }
-
-    public double getMinArrival() {
-        return MinArrival;
-    }
-
-    public double getMaxArrival() {
-        return MaxArrival;
-    }
-
-    public double getMinService() {
-        return MinService;
-    }
-
-    public double getMaxService() {
-        return MaxService;
-    }
-
-    public int getCustomerCount() {
-        return customerCount;
-    }
-
-    public int getLossCount() {
-        return lossCount;
+    public int getPerdas() {
+        return perdas;
     }
     
-    public double getTotalTime() {
-        return totalTime;
+    public void count(int estado, float tempo) {
+        estados.put(estado, tempo);
     }
 
-    public void setTotalTime(double totalTime) {
-        this.totalTime = totalTime;
+    public Float get(int estado) {
+        return estados.get(estado);
     }
-    public double getRoteamento() {
-        return roteamento;
+    
+    public HashMap<Integer, Float> getEstados() {
+        return estados;
     }
 
+    public void setPoncentagem(int estado, float tempo, float tempoTotal) {
+        estados.replace(estado, (tempo/tempoTotal)*100);
+    }
 
-    public void imprimir() {
-        System.out.println("Fila: ");
-        System.out.println("Servidores: " + servidores);
-        System.out.println("Capacidade: " + capacidade);
-        System.out.println("Min Arrival: " + MinArrival);
-        System.out.println("Max Arrival: " + MaxArrival);
-        System.out.println("Min Service: " + MinService);
-        System.out.println("Max Service: " + MaxService);
-        System.out.println("Customer Count: " + customerCount);
-        System.out.println("Loss Count: " + lossCount);
-        System.out.println("Total Time: " + totalTime);
-        System.out.println("Roteamento: " + roteamento);
-        System.out.println("Probabilidade de cada estado: ");
-        for (int i = 0; i < capacidade; i++) {
-            System.out.println("Estado " + i + ": " + tempo_estado[i]/totalTime * 100 + "%");
+    @Override
+    public String toString() {
+        if(k == -1) {
+            return "G/G/"+c;
         }
+        return "G/G/"+c+"/"+k;
     }
-
-    
-
-
-
 }
