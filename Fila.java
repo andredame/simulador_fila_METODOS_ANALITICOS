@@ -1,75 +1,155 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.PriorityQueue;
-
+import java.util.Map;
 
 public class Fila {
-    private PriorityQueue<Event> events;
-    private int tamFila;
+    private int servidores;
+    
+    private int capacidade;
+    private double MinArrival;
+    private double MaxArrival;
+    private double MinService;
+    private double MaxService;
+    private int customerCount;
+    private int lossCount;
+    private double totalTime;
+    private double[] tempo_estado;
+    private Map<Integer,Double> listRoteamento;
 
+    public Fila(
+        int servidores,
+         int capacidade, 
+         double MinArrival, 
+         double MaxArrival, 
+         double MinService, 
+         double MaxService,
+         Map<Integer,Double> listRoteamento
+        ) {
 
+        this.servidores = servidores;
+        this.capacidade = capacidade;
+        this.MinArrival = MinArrival;
+        this.MaxArrival = MaxArrival;
+        this.MinService = MinService;
+        this.MaxService = MaxService;
+        this.listRoteamento = listRoteamento;
 
-    public Fila() {
-        this.events = new PriorityQueue<>();
-        this.tamFila = 0;
-    }
-
-
-    public void add(EventType evento,double numAleatorio,double tempoTotal) {
+        this.customerCount = 0;
+        this.lossCount = 0;
+        this.totalTime = 0.0;
+        this.tempo_estado= new double[capacidade+1];
+        for (int i = 0; i < capacidade; i++) {
+            tempo_estado[i] = 0.0;
+        }
         
-        double tempoNovo=calculoPosicao(tempoTotal ,evento, numAleatorio);
-        Event novoEvento ;
-        if (evento == EventType.CHEGADA){
-            //U(a, b) = a + [(b - a)*x]
-            novoEvento= new Event(EventType.CHEGADA,calculoPosicao(tempoTotal,evento, numAleatorio));
+    }
+    public Fila(
+        int servidores,
+         double MinArrival, 
+         double MaxArrival, 
+         double MinService, 
+         double MaxService,
+         Map<Integer,Double> listRoteamento
+        ) {
+
+        this.servidores = servidores;
+        this.MinArrival = MinArrival;
+        this.MaxArrival = MaxArrival;
+        this.MinService = MinService;
+        this.MaxService = MaxService;
+        this.listRoteamento = listRoteamento;
+
+        this.customerCount = 0;
+        this.lossCount = 0;
+        this.totalTime = 0.0;
+
+        
+    }
+
+  
+    public void acumulaTempoEstado(double tempoChegada){
+        this.tempo_estado[this.customerCount] = tempoChegada;
+        
+    }
+    public double getTempoEstado(int i){
+        return tempo_estado[i];
+    }
+
+
+    public int status(){
+        return customerCount;
+    }
+
+    public void loss(){
+        lossCount++;
+    }
+    public void in(){
+        customerCount++;
+    }
+    public void out(){
+        customerCount--;
+    }
+    public int getServidores() {
+        return servidores;
+    }
+
+    public int getCapacidade() {
+        return capacidade;
+    }
+
+    public double getMinArrival() {
+        return MinArrival;
+    }
+
+    public double getMaxArrival() {
+        return MaxArrival;
+    }
+
+    public double getMinService() {
+        return MinService;
+    }
+
+    public double getMaxService() {
+        return MaxService;
+    }
+
+    public int getCustomerCount() {
+        return customerCount;
+    }
+
+    public int getLossCount() {
+        return lossCount;
+    }
+    
+    public double getTotalTime() {
+        return totalTime;
+    }
+
+    public void setTotalTime(double totalTime) {
+        this.totalTime = totalTime;
+    }
+    public double getRoteamento() {
+        return roteamento;
+    }
+
+
+    public void imprimir() {
+        System.out.println("Fila: ");
+        System.out.println("Servidores: " + servidores);
+        System.out.println("Capacidade: " + capacidade);
+        System.out.println("Min Arrival: " + MinArrival);
+        System.out.println("Max Arrival: " + MaxArrival);
+        System.out.println("Min Service: " + MinService);
+        System.out.println("Max Service: " + MaxService);
+        System.out.println("Customer Count: " + customerCount);
+        System.out.println("Loss Count: " + lossCount);
+        System.out.println("Total Time: " + totalTime);
+        System.out.println("Roteamento: " + roteamento);
+        System.out.println("Probabilidade de cada estado: ");
+        for (int i = 0; i < capacidade; i++) {
+            System.out.println("Estado " + i + ": " + tempo_estado[i]/totalTime * 100 + "%");
         }
-        else{
-            novoEvento = new Event(EventType.SAIDA,calculoPosicao(tempoTotal,evento, numAleatorio));
-        }
-        events.add(novoEvento);
-
     }
 
-    public Event remove() {
-        return events.poll();
-    }
-
-
-
-    public double calculoPosicao(double tempoTotal,EventType evento,double numAleatorio){
-        if (evento == EventType.CHEGADA){
-
-            return tempoTotal + (Event.MIN_CHEGADA_CLIENTE + ((Event.MAX_CHEGADA_CLIENTE - Event.MIN_CHEGADA_CLIENTE)*numAleatorio));
-        }
-        else{
-            return tempoTotal + Event.MIN_PEDIDO_SAIDA + ((Event.MAX_PEDIDO_SAIDA - Event.MIN_PEDIDO_SAIDA)*numAleatorio);
-        }
-    }
-
-
-    public void incrementaFila(){
-        this.tamFila++;
-    }
-    public void decrementaFila(){
-        this.tamFila--;
-    }
-
-
-
-    public boolean isEmpty() {
-        return events.isEmpty();
-    }
-    public int size() {
-        return events.size();
-    }
-
-    public int getTamFila() {
-        return tamFila;
-    }
-    public void setTamFila(int tamFila) {
-        this.tamFila = tamFila;
-    }
-
+    
 
 
 
