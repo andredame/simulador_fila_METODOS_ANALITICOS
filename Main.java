@@ -4,19 +4,18 @@ import java.util.Queue;
 public class Main {
     public static void main(String[] args) {
         // Criação de filas
-        Fila fila1 = new Fila("f1", 1, -1,1,2);
-        Fila fila2 = new Fila("f2", 2, 5, 4, 8);
-        Fila fila3 = new Fila("f3", 2, 10, 5, 15);
+        Fila fila1 = new Fila("f1", 3, 10,5,10);
+        Fila fila2 = new Fila("f2", 2, 15,11, 25);
+        Fila fila3 = new Fila("f3", 3, 12, 15, 30);
 
-        float [] primeiraChegada= {2, 4};
+        float [] primeiraChegada= {4, 8};
         LinkedList<Fila> filas = new LinkedList<Fila>();
         filas.add(fila1);filas.add(fila2); filas.add(fila3);
         //adicione as networks
-        addNetwork(filas, "f1", "f2", 0.8f);
-        addNetwork(filas, "f1", "f3", 0.2f);
-        addNetwork(filas, "f2", "f1", 0.3f);
-        addNetwork(filas, "f2", "f2", 0.5f);
-        addNetwork(filas, "f3", "f3", 0.7f);
+        addNetwork(filas, "f1", "f2", 0.3f);
+        addNetwork(filas, "f1", "f3", 0.6f);
+        addNetwork(filas, "f2", "f3", 0.7f);
+        addNetwork(filas, "f3", "f2", 0.4f);
 
     
         FilaRoteamento filaRoteamento = new FilaRoteamento(filas, primeiraChegada,2,100000,123 );

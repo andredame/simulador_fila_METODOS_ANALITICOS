@@ -1,0 +1,56 @@
+!PARAMETERS
+rndnumbers: 
+- 0.2176
+- 0.0103
+- 0.1109
+- 0.3456
+- 0.991
+- 0.2323
+- 0.9211
+- 0.0322
+- 0.1211
+- 0.5131
+- 0.7208
+- 0.9172
+- 0.9922
+- 0.8324
+- 0.5011
+- 0.2931
+
+
+
+arrivals: 
+   F1: 1.0
+
+queues: 
+   F1: 
+      servers: 3
+      capacity: 10
+      minArrival: 4
+      maxArrival: 8
+      minService: 5
+      maxService: 10
+   F2: 
+      servers: 2
+      capacity: 15
+      minService: 11
+      maxService: 25
+   F3:
+      servers: 3
+      capacity: 12
+      minService: 15
+      maxService: 30
+      
+network: 
+-  source: F1
+   target: F2
+   probability: 0.3
+-  source: F1
+   target: F3
+   probability: 0.6
+-  source: F2
+   target: F3
+   probability: 0.7
+-  source: F3
+   target: F2
+   probability: 0.4
